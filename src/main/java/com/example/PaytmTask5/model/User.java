@@ -44,7 +44,7 @@ public class User {
 
     @Column(name="address2")
     private String address2;
-
+    private boolean haswallet;
     public User() {}
     public User(String firstName, String lastName, String email, String address1, String address2,long mobile) {
         super();
@@ -54,6 +54,7 @@ public class User {
         this.address1 = address1;
         this.address2 = address2;
         this.mobile=mobile;
+
     }
 
     public Long getMobile() {
@@ -110,6 +111,13 @@ public class User {
 
     public void setAddress2(String address2) {
         this.address2 = address2;
+    }
+    public boolean getHaswallet() {
+        return haswallet;
+    }
+
+    public void setHaswallet(boolean haswallet) {
+        this.haswallet = haswallet;
     }
 
 }
