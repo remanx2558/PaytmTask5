@@ -31,4 +31,10 @@ public class UserService {
         return userRepository.findByMobile(mobilenumber);
     }
 
+    public List<User> findbyGender(String gender) { return userRepository.findByGender(gender);  }
+
+    public List<User> findbyHaswallet(boolean haswallet) { return userRepository.findByHaswallet(haswallet);  }
+
+
+
 }

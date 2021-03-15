@@ -44,9 +44,21 @@ public class User {
 
     @Column(name="address2")
     private String address2;
+
+
+
+    @Column(name="haswallet")
     private boolean haswallet;
+
+    @Column(name="balance")
+    private long balance;
+
+    @Column(name="gender")
+    private String gender;
+
+
     public User() {}
-    public User(String firstName, String lastName, String email, String address1, String address2,long mobile) {
+    public User(String firstName, String lastName, String email, String address1, String address2,long mobile,String gender) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,6 +66,9 @@ public class User {
         this.address1 = address1;
         this.address2 = address2;
         this.mobile=mobile;
+        this.gender=gender;
+        this.haswallet=false;
+        this.balance=0;
 
     }
 
@@ -118,6 +133,26 @@ public class User {
 
     public void setHaswallet(boolean haswallet) {
         this.haswallet = haswallet;
+    }
+
+    public boolean isHaswallet() {
+        return haswallet;
+    }
+
+    public long getBalance() {
+        return balance;
+    }
+
+    public void setBalance(long balance) {
+        this.balance = balance;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
 }

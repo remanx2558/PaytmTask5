@@ -13,4 +13,10 @@ public interface UserRepository extends JpaRepository<User,Long>{
     public List<User> findByEmail(String emailid);
 
     public List<User> findByMobile(long mobilenumber);
+
+    public List<User> findByGender(String gender);
+
+    public List<User> findByHaswallet(boolean haswallet);
+
+
 }

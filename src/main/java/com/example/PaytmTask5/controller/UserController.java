@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@RequestMapping("api/users")
+@RequestMapping("/users")
 @RestController
 public class UserController {
 
@@ -38,37 +38,15 @@ public class UserController {
     @GetMapping("/{uid}")
     public User getUserById(@PathVariable (value = "uid") long userId ) {
 
-        return this.userRepository.findById(userId).orElseThrow(() ->new ResourceNotFoundException("user not Fondd with id : "+userId));
+        return this.userRepository.findById(userId).orElseThrow(() ->new ResourceNotFoundException("user not Found with id : "+userId));
     }
 
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {// we will be requiring request body to get data to fill
-       // String msg = PostValidator.postResponseMessage(user, userRepository);
-//        if(msg != "") {
-//
-//            logger.log(Level.INFO, "undesired input");
-//            throw new ResourceNotFoundException("undesired input");
-//        }
-        ArrayList<User> allUsers=getAllusers();
-        for(int i=0;i<allUsers.size();i++) {
-            User curr=allUsers.get(i);
-
-            if((curr.getFirstName().compareTo(user.getFirstName())==0) && (curr.getLastName().compareTo(user.getLastName())==0)) {
-                throw new ResourceNotFoundException("This User Name already Exist");
-            }
-            else if((curr.getEmail().compareTo(user.getEmail())==0)) {
-                throw new ResourceNotFoundException("This Mail already Exist");
-            }
-            else if ((curr.getMobile().compareTo(user.getMobile())==0)){
-                throw new ResourceNotFoundException("This Mobile alreeady Exist");
-            }
-
-        }
-
+        PostValidator.postResponseMessageUser(user, userRepository);//checking conditions
         logger.log(Level.INFO, user.toString());
         return this.userRepository.save(user);
-
     }
 
     @PutMapping("/{uid}")
@@ -76,16 +54,22 @@ public class UserController {
 
         User existingUser = this.userRepository.findById(userId).orElseThrow(() ->new ResourceNotFoundException("user not Fondd with id : "+userId));
 
-//        if(!PutValidator.canBeUpdated(user, existingUser)) {
+        PutValidator.canBeUpdatedUser(user,existingUser,userRepository);//condition checking
+//        if(!PutValidator.canBeUpdatedUser(user, existingUser)) {
 //            logger.log(Level.INFO, "Only email and address can be updated");
 //            throw new ResourceNotFoundException("Only email and address can be updated");
 //        }
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setAddress1(user.getAddress1());
-        existingUser.setAddress2(user.getAddress2());
-        existingUser.setMobile(user.getMobile());
+        if(user.getFirstName()!=null){existingUser.setFirstName(user.getFirstName());}
+        if(user.getLastName()!=null){existingUser.setLastName(user.getLastName());}
+        if(user.getAddress1()!=null){ existingUser.setAddress1(user.getAddress1());}
+        if(user.getAddress2()!=null){existingUser.setAddress2(user.getAddress2());}
+        if(user.getMobile()!=null ){existingUser.setMobile(user.getMobile());}
+        if(user.getEmail()!=null ){existingUser.setEmail(user.getEmail());}
+        if(user.getGender()!=null ){existingUser.setGender(user.getGender());}
+        ///balance is not updated here
+        ///same number or email in data base cannot be changed
+        ///pk cannot be changed
+
         logger.log(Level.INFO, user.toString());
 
         return this.userRepository.save(existingUser);//this will directly save into database
@@ -101,7 +85,7 @@ public class UserController {
 
 
     }
-    @DeleteMapping(value = "/user")
+    @DeleteMapping(value = "/admin/alluser")
     public ResponseEntity<?> deleteAll() {
         logger.log(Level.INFO, "all users deleted at "+UtilityMethods.get_current_time());
         ResponseBody responseBody = new ResponseBody("all users deleted", "OK");
