@@ -89,44 +89,50 @@ public class WalletController {
 
 //PUT
     //activate or deactivate wallet
-    //change mobile
-    //change balance
-    @PutMapping(value = "/wallet", params = "userId")
-    public ResponseEntity<ResponseBody> addBalanceByUserID(@RequestParam("userId") Long id,
-                                                           @RequestBody Wallet balance) {
-        List<Wallet> wallets = PutValidator.canBalanceBeAdded(walletService, id, balance);
-        ResponseBody responseBody;
-        if(wallets.isEmpty()) {
-            responseBody = new ResponseBody("balance is empty in wallet", "OK");
-            logger.log(Level.INFO, responseBody.toString());
-            return new ResponseEntity<>(responseBody, OK);
-        }
-        Wallet wallet = wallets.get(0);
+    @PutMapping("/wallet/activate/{act}")
+public Wallet WalletActivation(@Valid @RequestBody Wallet walletBody, @PathVariable(value = "act") int activation) {
+   // PostValidator.walletPostValidate(walletBody, userService,walletService);
+    Wallet existingUser = this.walletRepository.findByMobileWallet(walletBody.getMobileWallet()).get(0);
+    if(activation==0){
+        existingUser.setHaswallet(false);
+    }
+    else if(activation==1){
+        existingUser.setHaswallet(true);
+    }
+    logger.log(Level.INFO, walletBody.toString());
+    return this.walletRepository.save(existingUser);//this will directly save into database
+}
+    //change mobile balance
+    @PutMapping("/wallet/add/money/{amount}")
+    public Wallet ChangeWalletBalance(@Valid @RequestBody Wallet walletBody, @PathVariable(value = "amount") long bal) {
 
-        // setting wallet balance and then saving it
-        wallet.setBalance(wallet.getBalance() + balance.getBalance());
-        responseBody = new ResponseBody(
-                "Balance of "+balance.getBalance()+" added to wallet with id = "+wallet.getId(),
-                "OK");
-        logger.log(Level.INFO, wallet.toString());
-        walletService.save(wallet);
-        return new ResponseEntity<>(responseBody, OK);
+        long num=walletBody.getMobileWallet();
+        List<Wallet> existingUsers = this.walletRepository.findByMobileWallet(num);
+        if(existingUsers==null){
+            throw new ResourceNotFoundException("user not Fondd with number : " + num);
+        }
+        Wallet existingUser =existingUsers.get(0);
+        long pre_bal=existingUser.getBalance();
+        existingUser.setBalance(bal+pre_bal);
+        logger.log(Level.INFO, walletBody.toString());
+        return this.walletRepository.save(existingUser);//this will directly save into database
     }
 
-    @DeleteMapping(value = "/wallet", params = "walletId")
-    public ResponseEntity<ResponseBody> deleteWalletByID(@RequestParam("walletId") Long id) {
-        ResponseBody responseBody;
-        try {
-            Wallet existingWallet = walletService.get(id);
-            responseBody = new ResponseBody("Deleted wallet successfully with id = "+id, "OK");
-            logger.log(Level.INFO, existingWallet.toString());
-            walletService.delete(id);
-            return new ResponseEntity<>(responseBody, OK);
-        }
-        catch (NoSuchElementException e) {
-            responseBody = new ResponseBody("Cannot delete nonexistent wallet", "Not found");
-            logger.log(Level.INFO, responseBody.toString());
-            return new ResponseEntity<>(responseBody, NOT_FOUND);
-        }
-    }
+
+//    @DeleteMapping(value = "/wallet", params = "walletId")
+//    public ResponseEntity<ResponseBody> deleteWalletByID(@RequestParam("walletId") Long id) {
+//        ResponseBody responseBody;
+//        try {
+//            Wallet existingWallet = walletService.get(id);
+//            responseBody = new ResponseBody("Deleted wallet successfully with id = "+id, "OK");
+//            logger.log(Level.INFO, existingWallet.toString());
+//            walletService.delete(id);
+//            return new ResponseEntity<>(responseBody, OK);
+//        }
+//        catch (NoSuchElementException e) {
+//            responseBody = new ResponseBody("Cannot delete nonexistent wallet", "Not found");
+//            logger.log(Level.INFO, responseBody.toString());
+//            return new ResponseEntity<>(responseBody, NOT_FOUND);
+//        }
+//    }
 }
