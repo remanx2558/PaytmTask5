@@ -1,37 +1,56 @@
 package com.example.PaytmTask5.model;
 
-import net.bytebuddy.implementation.bind.annotation.Default;
+import com.sun.istack.NotNull;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 // Wallet entity for wallet table
 @Entity
+@Table(name = "wallets")
 public class Wallet {
 
-    private long id, balance, owner;
-    private String creation;
+    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+
+    @Column(name = "balance")
+    private long balance;
+
+
+    @Column(name = "mobileWallet")
+    private Long mobileWallet;
+
+
+    @Column(name = "haswallet")
+    private boolean haswallet;
+
+
+    @Column(name = "isCustomer")
+    private boolean isCustomer;
 
     public Wallet() {}
 
-    public Wallet(long id, long balance, long owner, String creation) {
-        this.id = id;
-        this.balance = balance;
-        this.owner = owner;
-        this.creation = creation;
+    public Wallet( Long mobileWallet) {
+
+        super();
+        this.mobileWallet = mobileWallet;
+        this.isCustomer = true;
+        this.balance = 0;
+        this.haswallet = true;
+
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     public long getId() {
         return id;
     }
-
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
+
+
 
     public long getBalance() {
         return balance;
@@ -41,29 +60,31 @@ public class Wallet {
         this.balance = balance;
     }
 
-    public long getOwner() {
-        return owner;
+    public long getMobileWallet() {
+        return mobileWallet;
     }
 
-    public void setOwner(int owner) {
-        this.owner = owner;
+    public void setMobileWallet(long mobileWallet) {
+        this.mobileWallet = mobileWallet;
     }
 
-    public String getCreation() {
-        return creation;
+
+
+    public boolean isHaswallet() {
+        return haswallet;
     }
 
-    public void setCreation(String creation) {
-        this.creation = creation;
+    public void setHaswallet(boolean haswallet) {
+        this.haswallet = haswallet;
     }
 
-    @Override
-    public String toString() {
-        return "Wallet{" +
-                "id=" + id +
-                ", balance=" + balance +
-                ", owner=" + owner +
-                ", creation='" + creation + '\'' +
-                '}';
+    public boolean isCustomer() {
+        return isCustomer;
     }
+
+    public void setCustomer(boolean iscustomer) {
+        this.isCustomer = iscustomer;
+    }
+
+
 }

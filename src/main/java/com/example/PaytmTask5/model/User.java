@@ -12,63 +12,65 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.sun.istack.NotNull;
+
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long uid;
 
     @NotNull
-    @Size(min = 2 , message="First Name should have atelast 2 characters")
-    @Column(name="first_name")
+    @Size(min = 2, message = "First Name should have atelast 2 characters")
+    @Column(name = "first_name")
     private String firstName;
 
     @NotNull
-    @Column(name="mobile")
+    @Column(name = "mobile")
     private Long mobile;
 
     @NotNull
-    @Size(min = 2 , message="Last Name should have atelast 2 characters")
-    @Column(name="last_name")
+    @Size(min = 2, message = "Last Name should have atelast 2 characters")
+    @Column(name = "last_name")
     private String lastName;
 
     @NotBlank
     @Email
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name="address1")
+    @Column(name = "address1")
     private String address1;
 
-    @Column(name="address2")
+    @Column(name = "address2")
     private String address2;
 
 
-
-    @Column(name="haswallet")
+    @Column(name = "haswallet")
     private boolean haswallet;
 
-    @Column(name="balance")
+    @Column(name = "balance")
     private long balance;
 
-    @Column(name="gender")
+    @Column(name = "gender")
     private String gender;
 
 
-    public User() {}
-    public User(String firstName, String lastName, String email, String address1, String address2,long mobile,String gender) {
+    public User() {
+    }
+
+    public User(String firstName, String lastName, String email, String address1, String address2, long mobile, String gender) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.address1 = address1;
         this.address2 = address2;
-        this.mobile=mobile;
-        this.gender=gender;
-        this.haswallet=false;
-        this.balance=0;
+        this.mobile = mobile;
+        this.gender = gender;
+        this.haswallet = false;
+        this.balance = 0;
 
     }
 
@@ -127,6 +129,7 @@ public class User {
     public void setAddress2(String address2) {
         this.address2 = address2;
     }
+
     public boolean getHaswallet() {
         return haswallet;
     }

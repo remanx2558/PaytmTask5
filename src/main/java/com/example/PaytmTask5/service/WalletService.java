@@ -16,11 +16,21 @@ public class WalletService {
     // Using all pre-created methods of WalletRepository
     public List<Wallet> listAll() { return walletRepository.findAll(); }
 
+    public void save(Wallet wallet) { walletRepository.save(wallet);
+    }
+
+
     public Wallet get(Long id) { return walletRepository.findById(id).get(); }
 
-    public void save(Wallet wallet) { walletRepository.save(wallet); }
 
     public void delete(Long id) { walletRepository.deleteById(id); }
 
-    public List<Wallet> findByOwnerID(long owner) { return walletRepository.findByOwner(owner); }
+    public void deleteAll() {
+        walletRepository.deleteAll();
+    }
+
+    public List<Wallet> findByMobileWallet(long mobileWallet) { return walletRepository.findByMobileWallet(mobileWallet); }
+    public List<Wallet> findByHaswallet(boolean haswallet) { return walletRepository.findByHaswallet(haswallet); }
+    public List<Wallet> findByIsCustomer(boolean isCustomer) { return walletRepository.findByIsCustomer(isCustomer); }
+
 }

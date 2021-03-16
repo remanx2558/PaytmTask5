@@ -1,4 +1,5 @@
 package com.example.PaytmTask5.controller;
+
 import java.util.ArrayList;
 
 import javax.validation.Valid;
@@ -28,17 +29,17 @@ public class UserController {
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     @GetMapping
-    public ArrayList<User> getAllusers(){
+    public ArrayList<User> getAllusers() {
 
-        logger.log(Level.INFO, "list of all users returned at "+ UtilityMethods.get_current_time());
+        logger.log(Level.INFO, "list of all users returned at " + UtilityMethods.get_current_time());
         return (ArrayList<User>) this.userRepository.findAll();
 
     }
 
     @GetMapping("/{uid}")
-    public User getUserById(@PathVariable (value = "uid") long userId ) {
+    public User getUserById(@PathVariable(value = "uid") long userId) {
 
-        return this.userRepository.findById(userId).orElseThrow(() ->new ResourceNotFoundException("user not Found with id : "+userId));
+        return this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user not Found with id : " + userId));
     }
 
 
@@ -49,23 +50,38 @@ public class UserController {
         return this.userRepository.save(user);
     }
 
+
     @PutMapping("/{uid}")
     public User updateUser(@RequestBody User user, @PathVariable("uid") long userId) {
 
-        User existingUser = this.userRepository.findById(userId).orElseThrow(() ->new ResourceNotFoundException("user not Fondd with id : "+userId));
+        User existingUser = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user not Fondd with id : " + userId));
 
-        PutValidator.canBeUpdatedUser(user,existingUser,userRepository);//condition checking
+        PutValidator.canBeUpdatedUser(user, existingUser, userRepository);//condition checking
 //        if(!PutValidator.canBeUpdatedUser(user, existingUser)) {
 //            logger.log(Level.INFO, "Only email and address can be updated");
 //            throw new ResourceNotFoundException("Only email and address can be updated");
 //        }
-        if(user.getFirstName()!=null){existingUser.setFirstName(user.getFirstName());}
-        if(user.getLastName()!=null){existingUser.setLastName(user.getLastName());}
-        if(user.getAddress1()!=null){ existingUser.setAddress1(user.getAddress1());}
-        if(user.getAddress2()!=null){existingUser.setAddress2(user.getAddress2());}
-        if(user.getMobile()!=null ){existingUser.setMobile(user.getMobile());}
-        if(user.getEmail()!=null ){existingUser.setEmail(user.getEmail());}
-        if(user.getGender()!=null ){existingUser.setGender(user.getGender());}
+        if (user.getFirstName() != null) {
+            existingUser.setFirstName(user.getFirstName());
+        }
+        if (user.getLastName() != null) {
+            existingUser.setLastName(user.getLastName());
+        }
+        if (user.getAddress1() != null) {
+            existingUser.setAddress1(user.getAddress1());
+        }
+        if (user.getAddress2() != null) {
+            existingUser.setAddress2(user.getAddress2());
+        }
+        if (user.getMobile() != null) {
+            existingUser.setMobile(user.getMobile());
+        }
+        if (user.getEmail() != null) {
+            existingUser.setEmail(user.getEmail());
+        }
+        if (user.getGender() != null) {
+            existingUser.setGender(user.getGender());
+        }
         ///balance is not updated here
         ///same number or email in data base cannot be changed
         ///pk cannot be changed
@@ -76,18 +92,19 @@ public class UserController {
     }
 
     @DeleteMapping("/{uid}")
-    public ResponseEntity<User> deleteUser(@PathVariable("uid") long userId){
+    public ResponseEntity<User> deleteUser(@PathVariable("uid") long userId) {
 
-        User existingUser = this.userRepository.findById(userId).orElseThrow(() ->new ResourceNotFoundException("user not Fondd with id : "+userId));
+        User existingUser = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user not Fondd with id : " + userId));
         this.userRepository.delete(existingUser);
         logger.log(Level.INFO, existingUser.toString() + "deleted");
         return ResponseEntity.ok().build();
 
 
     }
+
     @DeleteMapping(value = "/admin/alluser")
     public ResponseEntity<?> deleteAll() {
-        logger.log(Level.INFO, "all users deleted at "+UtilityMethods.get_current_time());
+        logger.log(Level.INFO, "all users deleted at " + UtilityMethods.get_current_time());
         ResponseBody responseBody = new ResponseBody("all users deleted", "OK");
         userRepository.deleteAll();
         return new ResponseEntity<>(responseBody, HttpStatus.OK);

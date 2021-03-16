@@ -15,26 +15,41 @@ public class UserService {
     private UserRepository userRepository;
 
     // Using all pre-created methods of UserRepository
-    public List<User> listAll() { return userRepository.findAll(); }
+    public List<User> listAll() {
+        return userRepository.findAll();
+    }
 
-    public void save(User user) { userRepository.save(user); }
+    public void save(User user) {
+        userRepository.save(user);
+    }
 
-    public User get(Long id) { return userRepository.findById(id).get(); }
+    public User get(Long id) {
+        return userRepository.findById(id).get();
+    }
 
-    public void delete(Long id) { userRepository.deleteById(id); }
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
 
-    public void deleteAll() { userRepository.deleteAll(); }
+    public void deleteAll() {
+        userRepository.deleteAll();
+    }
 
-    public List<User> findByEmail(String emailid) { return userRepository.findByEmail(emailid); }
+    public List<User> findByEmail(String emailid) {
+        return userRepository.findByEmail(emailid);
+    }
 
     public List<User> findbyMobile(long mobilenumber) {
         return userRepository.findByMobile(mobilenumber);
     }
 
-    public List<User> findbyGender(String gender) { return userRepository.findByGender(gender);  }
+    public List<User> findbyGender(String gender) {
+        return userRepository.findByGender(gender);
+    }
 
-    public List<User> findbyHaswallet(boolean haswallet) { return userRepository.findByHaswallet(haswallet);  }
-
+    public List<User> findbyHaswallet(boolean haswallet) {
+        return userRepository.findByHaswallet(haswallet);
+    }
 
 
 }

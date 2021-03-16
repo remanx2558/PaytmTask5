@@ -9,9 +9,7 @@ import com.example.PaytmTask5.service.UserService;
 import com.example.PaytmTask5.service.WalletService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,51 +46,27 @@ public class PostValidator {
         // else return "";//returning no error
     }
 
-    public static List<User> walletPostValidate(long mobileNumber, UserService userService) {
+    public static void walletPostValidate(Wallet walletBody, UserService userService,WalletService walletService) {
+      //information cannot be null byDefault as using table such a way
         // if mobile number we get from request body is 0
-        List<User> walletUser = new ArrayList<>();
-        if (mobileNumber == 0) {
-            throw new ResourceNotFoundException("Mobile number field is empty");
 
-//            Constants.setWalletPostMessage("Mobile number field is empty");
-//            return walletUser;
-        }
 
         // getting a list of user with the specified mobile number
-        walletUser = userService.findbyMobile(mobileNumber);
+        List<User> listUsers= userService.findbyMobile(walletBody.getMobileWallet());
+        if(listUsers.isEmpty()){
+            //throw no such user exist
+            throw new ResourceNotFoundException("No user with this mobile exist");
 
-        // if list is empty then the user with phone number doesn't exist
-        if (walletUser.isEmpty()) {
-            throw new ResourceNotFoundException("User with phone number " + mobileNumber + " does not exist");
-
-//            Constants.setWalletPostMessage("User with phone number "+ mobileNumber +" does not exist");
-//            return walletUser;
         }
-        // if list has a user but he is not already registered for a wallet
-        else if (walletUser.size() > 0 && walletUser.get(0).getHaswallet()) {
-            walletUser.remove(0);
-            throw new ResourceNotFoundException("User already has a wallet registered");
+        List<Wallet> listWallet= walletService.findByMobileWallet(walletBody.getMobileWallet());
+        if(!listWallet.isEmpty()){
+            //throw Wallet already exist
+            throw new ResourceNotFoundException("Wallet already exist with this mobile");
 
-//            Constants.setWalletPostMessage("User already has a wallet registered");
-//            return walletUser;
         }
-        return walletUser;
+
+        return;
     }
 
-    public static void createSuccessfulWalletAccount(List<User> walletUser, UserService userService,
-                                                     WalletService walletService) {
-        // getting and setting user object from userList
-        User user = walletUser.get(0);
-        user.setHaswallet(true);
 
-        // creating new wallet object for the user
-        Wallet wallet = new Wallet();
-        wallet.setBalance(0);
-        wallet.setCreation(UtilityMethods.get_current_time());
-        wallet.setOwner((int) user.getUid());
-        userService.save(user);
-        logger.log(Level.INFO, wallet.toString());
-        walletService.save(wallet);
-        //Constants.setWalletPostMessage("Wallet created");
-    }
 }
