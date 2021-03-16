@@ -22,3 +22,25 @@ Tech Stack expected:
 - MySql
 - Spring Boot
 - Hibernate
+
+
+User Related APIs:
+A)GET :
+        1)http://localhost:9090/users
+        2)http://localhost:9090/users/uid
+B)POST:
+        1)http://localhost:9090/users
+C)PUT:
+        1)http://localhost:9090/users/uid
+D)DELETE:
+
+body(JSON):{
+    "firstName" : "Yashwant",
+    "lastName" : "Gahlot",
+    "email":"gyash2558@gmail.com",
+    "address1":"xyxs",
+    "address2":"sdfadss",
+    "mobile":994564,
+    "gender":"female"
+    
+}
