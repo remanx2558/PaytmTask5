@@ -76,6 +76,11 @@ public class WalletController {
         walletBody.setCustomer(false);
         walletBody.setHaswallet(true);
         walletService.save(walletBody);
+        ///////////////////////making user wallet coexisting
+        User curr=userService.findbyMobile(walletBody.getMobileWallet()).get(0);
+        curr.setHaswallet(true);
+        userService.save(curr);
+        /////////////////////
         return walletBody;
     }
     @PostMapping("/customer/register")
@@ -84,6 +89,11 @@ public class WalletController {
         walletBody.setCustomer(true);
         walletBody.setHaswallet(true);
         walletService.save(walletBody);
+        ///////////////////////making user wallet coexisting
+        User curr=userService.findbyMobile(walletBody.getMobileWallet()).get(0);
+        curr.setHaswallet(true);
+        userService.save(curr);
+        /////////////////////
         return walletBody;
     }
 
@@ -93,13 +103,21 @@ public class WalletController {
 public Wallet WalletActivation(@Valid @RequestBody Wallet walletBody, @PathVariable(value = "act") int activation) {
    // PostValidator.walletPostValidate(walletBody, userService,walletService);
     Wallet existingUser = this.walletRepository.findByMobileWallet(walletBody.getMobileWallet()).get(0);
-    if(activation==0){
+        User curr=userService.findbyMobile(walletBody.getMobileWallet()).get(0);
+
+        if(activation==0){
         existingUser.setHaswallet(false);
-    }
+            curr.setHaswallet(false);
+        }
     else if(activation==1){
         existingUser.setHaswallet(true);
-    }
-    logger.log(Level.INFO, walletBody.toString());
+            curr.setHaswallet(true);
+        }
+        userService.save(curr);
+
+        logger.log(Level.INFO, walletBody.toString());
+        ///////////////////////making user wallet coexisting
+        /////////////////////
     return this.walletRepository.save(existingUser);//this will directly save into database
 }
     //change mobile balance
