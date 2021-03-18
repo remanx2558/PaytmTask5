@@ -30,10 +30,7 @@ A)GET :
         2)http://localhost:9090/users/uid
 B)POST:
         1)http://localhost:9090/users
-C)PUT:
-        1)http://localhost:9090/users/uid
-D)DELETE:
-
+        2
 body(JSON):{
     "firstName" : "Yashwant",
     "lastName" : "Gahlot",
@@ -44,3 +41,37 @@ body(JSON):{
     "gender":"female"
     
 }
+C)PUT:
+        1)http://localhost:9090/users/uid
+D)DELETE:
+
+API USED:
+GET: http://localhost:9090/transaction/status/{tid}
+GET: http://localhost:9090/transaction/{tid}
+GET: http://localhost:9090/transaction/all
+GET: http://localhost:9090/wallet
+
+POST:http://localhost:9090/(customer or merchant)/register
+{
+    "mobileWallet" : 3433344232
+}
+
+POST: http://localhost:9090/transaction/make
+body:{
+    "sender": 3433344232,
+    "receiver": 12332232,
+    "amount": 500
+}
+
+PUT:http://localhost:9090/wallet/add/money/{amount}
+{
+    "mobileWallet" :  12332232
+}
+PUT: http://localhost:9090/wallet/activate/(0 or 1)
+
+{
+    "mobileWallet" :  12332232
+}
+
+
+
