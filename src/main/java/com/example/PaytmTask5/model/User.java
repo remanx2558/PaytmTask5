@@ -82,7 +82,7 @@ public class User {
         this.mobile = mobile;
     }
 
-    public long getUid() {
+    public Long getUid() {
         return uid;
     }
 

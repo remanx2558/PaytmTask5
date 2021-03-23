@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +30,7 @@ public class UserController {
     @GetMapping
     public ArrayList<User> getAllusers() {
 
-        logger.log(Level.INFO, "list of all users returned at " + UtilityMethods.get_current_time());
+        logger.log(Level.INFO, "list of all users returned at " + UtilityMethods.getCurrentTime());
         return (ArrayList<User>) this.userRepository.findAll();
 
     }
@@ -104,7 +103,7 @@ public class UserController {
 
     @DeleteMapping(value = "/admin/alluser")
     public ResponseEntity<?> deleteAll() {
-        logger.log(Level.INFO, "all users deleted at " + UtilityMethods.get_current_time());
+        logger.log(Level.INFO, "all users deleted at " + UtilityMethods.getCurrentTime());
         ResponseBody responseBody = new ResponseBody("all users deleted", "OK");
         userRepository.deleteAll();
         return new ResponseEntity<>(responseBody, HttpStatus.OK);

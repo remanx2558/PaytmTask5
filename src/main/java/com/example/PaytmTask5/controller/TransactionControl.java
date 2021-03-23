@@ -1,5 +1,4 @@
 package com.example.PaytmTask5.controller;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.example.PaytmTask5.exception.ResourceNotFoundException;
@@ -8,15 +7,15 @@ import com.example.PaytmTask5.model.Wallet;
 import com.example.PaytmTask5.service.TransactionService;
 import com.example.PaytmTask5.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.example.PaytmTask5.utilities.UtilityMethods.get_current_time;
-
+import static com.example.PaytmTask5.utilities.UtilityMethods.getCurrentTime;
+@Transactional
 @RestController
 public class TransactionControl {
     @Autowired                         //dependency injection
@@ -60,7 +59,7 @@ public class TransactionControl {
         Wallet receiver =walletService.findByMobileWallet(transModel.getReceiver()).get(0);
 
         transModel.setStatus(false);
-        transModel.setTime(get_current_time());
+        transModel.setTime(getCurrentTime());
         transModel.setMode("online");
         if(sender==null) {
             throw new ResourceNotFoundException("sender do not exist");
@@ -80,14 +79,15 @@ public class TransactionControl {
         else if(receiver.isHaswallet()==false){
             throw new ResourceNotFoundException("receiver wallet not activated");
 
+
         }
         ////////////////////
-        long pre_sender=sender.getBalance();
-        long pre_receiver=receiver.getBalance();
-        pre_sender=pre_sender-transModel.getAmount();
-        pre_receiver=pre_receiver+transModel.getAmount();
-        sender.setBalance(pre_sender);
-        receiver.setBalance(pre_receiver);
+        long preSender=sender.getBalance();
+        long preReceiver=receiver.getBalance();
+        preSender=preSender-transModel.getAmount();
+        preReceiver=preReceiver+transModel.getAmount();
+        sender.setBalance(preSender);
+        receiver.setBalance(preReceiver);
         this.walletService.save(sender);
         this.walletService.save(receiver);
         transModel.setStatus(true);

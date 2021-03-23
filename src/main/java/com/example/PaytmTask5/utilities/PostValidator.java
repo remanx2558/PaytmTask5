@@ -46,20 +46,23 @@ public class PostValidator {
         // else return "";//returning no error
     }
 
-    public static void walletPostValidate(Wallet walletBody, UserService userService,WalletService walletService) {
-      //information cannot be null byDefault as using table such a way
+    public static void walletPostValidate(Wallet walletBody, UserService userService, WalletService walletService) {
+        //information cannot be null byDefault as using table such a way
         // if mobile number we get from request body is 0
+        if(walletBody.getMobileWallet()==null){
+            throw new ResourceNotFoundException("mobile number field cannot be empty");
+        }
 
 
         // getting a list of user with the specified mobile number
-        List<User> listUsers= userService.findbyMobile(walletBody.getMobileWallet());
-        if(listUsers.isEmpty()){
+        List<User> listUsers = userService.findbyMobile(walletBody.getMobileWallet());
+        if (listUsers.isEmpty()) {
             //throw no such user exist
             throw new ResourceNotFoundException("No user with this mobile exist");
 
         }
-        List<Wallet> listWallet= walletService.findByMobileWallet(walletBody.getMobileWallet());
-        if(!listWallet.isEmpty()){
+        List<Wallet> listWallet = walletService.findByMobileWallet(walletBody.getMobileWallet());
+        if (!listWallet.isEmpty()) {
             //throw Wallet already exist
             throw new ResourceNotFoundException("Wallet already exist with this mobile");
 

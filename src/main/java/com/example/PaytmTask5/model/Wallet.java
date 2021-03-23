@@ -60,7 +60,7 @@ public class Wallet {
         this.balance = balance;
     }
 
-    public long getMobileWallet() {
+    public Long getMobileWallet() {
         return mobileWallet;
     }
 

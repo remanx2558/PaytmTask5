@@ -1,11 +1,6 @@
 package com.example.PaytmTask5.model;
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.*;
-import java.util.Date;
-
-import static com.example.PaytmTask5.utilities.UtilityMethods.get_current_time;
 
 // Transaction entity for transaction table
 

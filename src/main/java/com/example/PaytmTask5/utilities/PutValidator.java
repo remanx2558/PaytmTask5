@@ -9,6 +9,7 @@ import com.example.PaytmTask5.service.WalletService;
 import java.util.List;
 
 public class PutValidator {
+    //check email and mobile number for User
     public static void canBeUpdatedUser(User newUser, User existingUser, UserRepository userRepository) {
 
         /// m e: nn tn nt tt
@@ -17,29 +18,27 @@ public class PutValidator {
         }
         if (newUser.getEmail() != null && !userRepository.findByEmail(newUser.getEmail()).isEmpty()) {
             throw new ResourceNotFoundException("cannot change to this email id ");
-
         }
-//
-//        return  newUser.getFirstName().equalsIgnoreCase(existingUser.getFirstName()) &&
-//                newUser.getLastName().equalsIgnoreCase(existingUser.getLastName()) &&
-//                newUser.getMobile() == existingUser.getMobile();
+        if (newUser.getUid() != null && !userRepository.findById(newUser.getUid()).isEmpty()) {
+            throw new ResourceNotFoundException("cannot change the UID its permanent");
+        }
     }
 
-    public static List<Wallet> canBalanceBeAdded(WalletService walletService, Long id,
-                                                 Wallet balanceWallet) {
+    public static List<Wallet> canBalanceBeAddedWallet(WalletService walletService, Long id,
+                                                       Wallet balanceWallet) {
         // find list of wallet by userID
         List<Wallet> wallets = walletService.findByMobileWallet(id);
 
         // if wallet list is empty, user doesn't exist
         if (wallets.isEmpty()) {
-            throw new ResourceNotFoundException("User does not exist");
-
-//            Constants.setWalletPutMessage("User does not exist");
-//            return wallets;
+            throw new ResourceNotFoundException("Wallet does not exist with this mobile number");
         }
 
         // getting wallet object from list and then balance
         Wallet wallet = wallets.get(0);
+        if (wallet.isHaswallet() == false) {
+            throw new ResourceNotFoundException("Wallet is de-activated");
+        }
         long balance = balanceWallet.getBalance();
 
         // adding balance = 0 is insignificant, less than 0 is not possible

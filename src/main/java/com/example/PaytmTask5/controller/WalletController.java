@@ -7,18 +7,17 @@ import com.example.PaytmTask5.repository.WalletRepository;
 import com.example.PaytmTask5.service.UserService;
 import com.example.PaytmTask5.service.WalletService;
 import com.example.PaytmTask5.utilities.PostValidator;
-import com.example.PaytmTask5.utilities.PutValidator;
 import com.example.PaytmTask5.utilities.UtilityMethods;
 import com.example.PaytmTask5.exception.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.validation.Valid;
-import org.springframework.http.HttpStatus;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -37,7 +36,7 @@ public class WalletController {
     // basically calling CRUD methods of the service class and specifying the response to return
     @GetMapping("/wallet")
     public List<Wallet> list() {
-        logger.log(Level.INFO, "list of all wallets returned at "+ UtilityMethods.get_current_time());
+        logger.log(Level.INFO, "list of all wallets returned at " + UtilityMethods.getCurrentTime());
         return walletService.listAll();
     }
 
@@ -49,8 +48,7 @@ public class WalletController {
             ResponseEntity<Wallet> r = new ResponseEntity<>(wallet, OK);
             logger.log(Level.INFO, wallet.toString());
             return r;
-        }
-        catch (NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             ResponseBody responseBody = new ResponseBody("Cannot read nonexistent wallet", "Not found");
             logger.log(Level.INFO, responseBody.toString());
             return new ResponseEntity<>(responseBody, NOT_FOUND);
@@ -60,11 +58,10 @@ public class WalletController {
     ///get walllet by mobile number
     @GetMapping("/mobile/{mobileN}")
     public Wallet getWalletByMobile(@PathVariable(value = "mobileN") long number) {
-        List<Wallet> currWallet=this.walletService.findByMobileWallet(number);
-        if(!currWallet.isEmpty()){
+        List<Wallet> currWallet = this.walletService.findByMobileWallet(number);
+        if (!currWallet.isEmpty()) {
             return currWallet.get(0);
-        }
-        else{
+        } else {
             throw new ResourceNotFoundException("Wallet not Found with mobile : " + number);
         }
     }
@@ -72,45 +69,45 @@ public class WalletController {
     // using User object as a request body where it will have only one field, i.e, mobile number and type
     @PostMapping("/merchant/register")
     public Wallet createMerchanWallet(@Valid @RequestBody Wallet walletBody) {// we will be requiring request body to get data to fill
-        PostValidator.walletPostValidate(walletBody, userService,walletService);
+        PostValidator.walletPostValidate(walletBody, userService, walletService);
         walletBody.setCustomer(false);
         walletBody.setHaswallet(true);
         walletService.save(walletBody);
         ///////////////////////making user wallet coexisting
-        User curr=userService.findbyMobile(walletBody.getMobileWallet()).get(0);
+        User curr = userService.findbyMobile(walletBody.getMobileWallet()).get(0);
         curr.setHaswallet(true);
         userService.save(curr);
         /////////////////////
         return walletBody;
     }
+
     @PostMapping("/customer/register")
     public Wallet createCustomereWallet(@Valid @RequestBody Wallet walletBody) {// we will be requiring request body to get data to fill
-        PostValidator.walletPostValidate(walletBody, userService,walletService);
+        PostValidator.walletPostValidate(walletBody, userService, walletService);
         walletBody.setCustomer(true);
         walletBody.setHaswallet(true);
         walletService.save(walletBody);
         ///////////////////////making user wallet coexisting
-        User curr=userService.findbyMobile(walletBody.getMobileWallet()).get(0);
+        User curr = userService.findbyMobile(walletBody.getMobileWallet()).get(0);
         curr.setHaswallet(true);
         userService.save(curr);
         /////////////////////
         return walletBody;
     }
 
-//PUT
+    //PUT
     //activate or deactivate wallet
     @PutMapping("/wallet/activate/{act}")
-public Wallet WalletActivation(@Valid @RequestBody Wallet walletBody, @PathVariable(value = "act") int activation) {
-   // PostValidator.walletPostValidate(walletBody, userService,walletService);
-    Wallet existingUser = this.walletRepository.findByMobileWallet(walletBody.getMobileWallet()).get(0);
-        User curr=userService.findbyMobile(walletBody.getMobileWallet()).get(0);
+    public Wallet WalletActivation(@Valid @RequestBody Wallet walletBody, @PathVariable(value = "act") int activation) {
+        // PostValidator.walletPostValidate(walletBody, userService,walletService);
+        Wallet existingUser = this.walletRepository.findByMobileWallet(walletBody.getMobileWallet()).get(0);
+        User curr = userService.findbyMobile(walletBody.getMobileWallet()).get(0);
 
-        if(activation==0){
-        existingUser.setHaswallet(false);
+        if (activation == 0) {
+            existingUser.setHaswallet(false);
             curr.setHaswallet(false);
-        }
-    else if(activation==1){
-        existingUser.setHaswallet(true);
+        } else if (activation == 1) {
+            existingUser.setHaswallet(true);
             curr.setHaswallet(true);
         }
         userService.save(curr);
@@ -118,20 +115,21 @@ public Wallet WalletActivation(@Valid @RequestBody Wallet walletBody, @PathVaria
         logger.log(Level.INFO, walletBody.toString());
         ///////////////////////making user wallet coexisting
         /////////////////////
-    return this.walletRepository.save(existingUser);//this will directly save into database
-}
+        return this.walletRepository.save(existingUser);//this will directly save into database
+    }
+
     //change mobile balance
     @PutMapping("/wallet/add/money/{amount}")
     public Wallet ChangeWalletBalance(@Valid @RequestBody Wallet walletBody, @PathVariable(value = "amount") long bal) {
 
-        long num=walletBody.getMobileWallet();
+        long num = walletBody.getMobileWallet();
         List<Wallet> existingUsers = this.walletRepository.findByMobileWallet(num);
-        if(existingUsers==null){
+        if (existingUsers == null) {
             throw new ResourceNotFoundException("user not Fondd with number : " + num);
         }
-        Wallet existingUser =existingUsers.get(0);
-        long pre_bal=existingUser.getBalance();
-        existingUser.setBalance(bal+pre_bal);
+        Wallet existingUser = existingUsers.get(0);
+        long pre_bal = existingUser.getBalance();
+        existingUser.setBalance(bal + pre_bal);
         logger.log(Level.INFO, walletBody.toString());
         return this.walletRepository.save(existingUser);//this will directly save into database
     }
