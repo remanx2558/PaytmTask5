@@ -35,6 +35,9 @@ public class Transaction {
     @Column(name = "time")
     private String time;
 
+    private long senderId;
+    
+
 
     public Transaction() {
     }
