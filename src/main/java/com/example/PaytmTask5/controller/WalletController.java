@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.validation.Valid;
 
+import static com.example.PaytmTask5.utilities.PutValidator.canBalanceBeAddedWallet;
 import static org.springframework.http.HttpStatus.*;
 
 // wallet controller class for accepting and managing HTTP Requests
@@ -123,6 +124,8 @@ public class WalletController {
     public Wallet ChangeWalletBalance(@Valid @RequestBody Wallet walletBody, @PathVariable(value = "amount") long bal) {
 
         long num = walletBody.getMobileWallet();
+        canBalanceBeAddedWallet(walletService,num,walletBody);
+
         List<Wallet> existingUsers = this.walletRepository.findByMobileWallet(num);
         if (existingUsers == null) {
             throw new ResourceNotFoundException("user not Fondd with number : " + num);

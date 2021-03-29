@@ -24,10 +24,10 @@ public class PutValidator {
         }
     }
 
-    public static List<Wallet> canBalanceBeAddedWallet(WalletService walletService, Long id,
+    public static void canBalanceBeAddedWallet(WalletService walletService, Long mob,
                                                        Wallet balanceWallet) {
         // find list of wallet by userID
-        List<Wallet> wallets = walletService.findByMobileWallet(id);
+        List<Wallet> wallets = walletService.findByMobileWallet(mob);
 
         // if wallet list is empty, user doesn't exist
         if (wallets.isEmpty()) {
@@ -42,13 +42,13 @@ public class PutValidator {
         long balance = balanceWallet.getBalance();
 
         // adding balance = 0 is insignificant, less than 0 is not possible
-        if (balance < 1) {
-            wallets.remove(0);
-            throw new ResourceNotFoundException("Cannot add balance <= 0");
+//        if (balance < 1) {
+//            wallets.remove(0);
+//            throw new ResourceNotFoundException("Cannot add balance <= 0");
+//
+////            Constants.setWalletPutMessage("Cannot add balance <= 0");
+////            return wallets;
+//        }
 
-//            Constants.setWalletPutMessage("Cannot add balance <= 0");
-//            return wallets;
-        }
-        return wallets;
     }
 }
